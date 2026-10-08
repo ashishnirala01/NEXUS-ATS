@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS ATS Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="hero compact">
+        <div class="badge">ANALYSIS COMPLETE</div>
+        <h1>NEXUS <span>ATS</span></h1>
+    </div>
+
+    <div class="score-card card">
+        <div class="score">{{ result.score }}%</div>
+        <div>
+            <h2>ATS Score</h2>
+            <p>Estimated score based on NEXUS ATS v1.0 checks.</p>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Skills</h2>
+            <div class="metric">{{ result.skill_score }}%</div>
+            <p>Professional skills detected.</p>
+        </div>
+
+        <div class="card">
+            <h2>Sections</h2>
+            <div class="metric">{{ result.section_score }}%</div>
+            <p>Standard resume sections detected.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Detected Skills</h2>
+        {% if result.skills %}
+        <div class="chips">
+            {% for skill in result.skills %}
+            <span class="chip good">{{ skill }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No known technical skills were detected.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>ATS Checks</h2>
+        <ul class="checks">
+            {% for name, passed in result.checks.items() %}
+            <li>
+                <span>{{ name }}</span>
+                <strong class="{{ 'pass' if passed else 'fail' }}">
+                    {{ "✓ Passed" if passed else "✗ Needs attention" }}
+                </strong>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Resume Sections</h2>
+        <ul class="checks">
+            {% for name, present in result.sections.items() %}
+            <li>
+                <span>{{ name }}</span>
+                <strong class="{{ 'pass' if present else 'fail' }}">
+                    {{ "✓ Present" if present else "✗ Missing" }}
+                </strong>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Suggestions</h2>
+        <ul>
+            {% for suggestion in result.suggestions %}
+            <li>{{ suggestion }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a class="back" href="/">← Analyze another resume</a>
+
+    <p class="note">
+        NEXUS ATS does not guarantee an employer's ATS decision.
+        This version performs rule-based resume analysis.
+    </p>
+</div>
+</body>
+</html>
